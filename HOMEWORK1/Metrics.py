@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.stats as sp
+import matplotlib.pyplot as plt
 
 index = np.loadtxt("../glass.data.txt", usecols=0, delimiter=",", dtype=int)
 attributes = np.loadtxt("../glass.data.txt", usecols=[x for x in range(1, 10)], delimiter=",")
@@ -34,11 +35,17 @@ for j in [1, 2, 3, 5, 6, 7]:
     strres += "\\\\ "
     print strres
 
-
 """ Unconditional bi-variate analysis
 """
-
+strres = ""
+covTable = np.zeros((9, 9))
+for i in range(9):
+    strres += "\n{:02d}".format(i + 1)
+    for j in range(9):
+        covTable[i, j] = np.corrcoef(attributes[:, i], attributes[:, j])[1, 0]
+        strres += "&{:.04f}".format(covTable[i, j])
+    strres += "\\\\"
+print strres
 
 """ Unconditional multi-variate analysis
 """
-

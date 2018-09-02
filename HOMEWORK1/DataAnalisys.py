@@ -27,6 +27,15 @@ for i in range(9):
 
 """ Unconditional bi-variate analysis
 """
+covTable = np.zeros((9, 9))
+for i in range(9):
+    for j in range(9):
+        covTable[i, j] = np.corrcoef(attributes[:, i], attributes[:, j])[1, 0]
+
+plt.matshow(covTable)
+plt.xticks(range(9), ["", "Na", "Mg", "Al", "Si", "K", "Ca", "Ba", "Fe"])
+plt.yticks(range(9), ["Refractive index", "Na", "Mg", "Al", "Si", "K", "Ca", "Ba", "Fe"])
+plt.savefig("FIGURE/Covariance_table.png", dpi=100, pad_inches=100)
 
 
 """ Unconditional multi-variate analysis
