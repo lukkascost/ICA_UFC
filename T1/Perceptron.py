@@ -23,7 +23,10 @@ class Perceptron():
                 self.w = self.w + (self.lr * e * X)
                 erro += abs(e)
             if erro == 0:
+                print("BRAAK")
                 break
+            print("EPOCA: ", ep + 1, "ERRO", erro, "W", self.w)
+
 
     def predict(self, x):
         u = self.w.T * x
