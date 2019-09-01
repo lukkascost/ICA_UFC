@@ -1,19 +1,18 @@
 from matplotlib import cm
 import numpy as np
-import matplotlib.pyplot as plt
 
 from MachineLearn.Classes import Experiment, DataSet, Data
 from T1.Perceptron import Perceptron
 
 COLOR = cm.rainbow(np.linspace(0, 1, 5))
 learning_rate = 0.01
-epochs = 20000
+epochs = 5000
 
 oExp = Experiment()
 
 oDataSet = DataSet()
-base = np.loadtxt("iris.data", usecols=range(4), delimiter=",")
-classes = np.loadtxt("iris.data", dtype=object, usecols=-1, delimiter=",")
+base = np.loadtxt("Datasets/iris_2.data", usecols=range(4), delimiter=",")
+classes = np.loadtxt("Datasets/iris_2.data", dtype=object, usecols=-1, delimiter=",")
 
 for x, y in enumerate(base):
     oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
@@ -32,9 +31,9 @@ for j in range(20):
         oData.confusion_matrix[int(oDataSet.labels[i]), perc.predict(data)] += 1
     oDataSet.append(oData)
 oExp.add_data_set(oDataSet,
-                  description="  Experimento iris PS 20 realizaçoes.".format())
-oExp.save("Objects/EXP02_PS_20.gzip".format())
+                  description="  Experimento iris  PS 20 realizaçoes.".format())
+oExp.save("Objects/EXP01_2_PS_20.gzip".format())
 
-oExp = Experiment.load("Objects/EXP02_PS_20.gzip".format())
+oExp = Experiment.load("Objects/EXP01_2_PS_20.gzip".format())
 print(oExp)
 print(oExp.experimentResults[0].sum_confusion_matrix)
