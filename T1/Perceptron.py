@@ -5,9 +5,12 @@ class Perceptron():
     def __init__(self, learning_rate):
         self.w = []
         self.wt = []
+        self.et = []
         self.lr = learning_rate
 
     def train(self, att, labels, epochs):
+        self.wt = []
+        self.et = []
         self.w = np.random.random((att.shape[1] + 1, 1))
         self.wt.append(self.w)
         data = np.hstack((att, labels))
@@ -22,6 +25,7 @@ class Perceptron():
                 e = int(labels[i]) - y
                 self.w = self.w + (self.lr * e * X)
                 erro += abs(e)
+            self.et.append(erro)
             if erro == 0:
                 break
         print("EPOCA: ", ep + 1, "ERRO", erro, "W", self.w)
