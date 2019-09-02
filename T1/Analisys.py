@@ -42,6 +42,8 @@ print(oData13.confusion_matrix)
 print(oData2.confusion_matrix)
 
 # Etapa 2
+plt.scatter(0, 0, marker='o', edgecolors='none', color='black', label='Amostra Treino')
+plt.scatter(0, 0, marker='v', edgecolors='none', color='black', label='Amostra Teste')
 for x1 in range(-20, 121):
     print(x1)
     for x2 in range(-20, 121):
@@ -77,6 +79,7 @@ for i in oData2.Testing_indexes:
              marker='v',
              markerfacecoloralt='white',
              )
+plt.legend(loc='upper left', bbox_to_anchor=(1.04, 1))
 plt.grid(True)
 plt.savefig(("Results/et2_ex2_surface.png"), dpi=100, bbox_inches="tight")
 plt.show()
