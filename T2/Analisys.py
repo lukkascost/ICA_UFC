@@ -13,7 +13,7 @@ base1 = np.loadtxt("Datasets/dt_1.txt", delimiter=" ")
 def getBestTrain(exp):
     """Etapa 1: Matriz confusao e grafico para melhor treinamento."""
     oDataSet = exp.experimentResults[0]
-    best = 1000000;
+    best = 1000000
     oBestData = None
     for oData in oDataSet.dataSet:
         txAcc = oData.params['MSE']
