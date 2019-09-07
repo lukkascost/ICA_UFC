@@ -5,8 +5,8 @@ from MachineLearn.Classes import Experiment, DataSet, Data
 from T2.Perceptron import Perceptron_Adaline
 
 COLOR = cm.rainbow(np.linspace(0, 1, 5))
-learning_rate = 0.01
-epochs = 3000
+learning_rate = 0.1
+epochs = 5000
 
 oExp = Experiment()
 

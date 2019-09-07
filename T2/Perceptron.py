@@ -26,7 +26,7 @@ class Perceptron_Adaline():
                 self.w = self.w + (self.lr * e * X)
                 erro += abs(e)
             self.et.append(erro)
-            if erro < 30:
+            if erro < 5:
                 break
         print("EPOCA: ", ep + 1, "ERRO", erro, "W", self.w)
 
