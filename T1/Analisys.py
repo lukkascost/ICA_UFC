@@ -10,9 +10,17 @@ oExp13 = Experiment.load("Objects/EXP01_3_PS_20.gzip".format())
 oExp2 = Experiment.load("Objects/EXP02_PS_20.gzip".format())
 COLORS = ['RED', 'BLUE']
 
+print(oExp11)
+print()
+print(oExp12)
+print()
+print(oExp13)
+print()
+print(oExp2)
+print()
+
 
 # Etapa 1
-
 def getBestTrain(exp, name):
     """Etapa 1: Matriz confusao e grafico para melhor treinamento."""
     oDataSet = exp.experimentResults[0]
@@ -31,15 +39,31 @@ def getBestTrain(exp, name):
     return oBestData
 
 
+def extractTrain_Test(odata, odataSet, path):
+    labels = []
+    for i in odataSet.labels:
+        labels.append(odataSet.labelsNames[int(i)])
+    data = np.hstack((odataSet.attributes[odata.Training_indexes], np.array([labels]).T[odata.Training_indexes]))
+    np.savetxt(path + "Train.txt", data, fmt='%s', delimiter=',')
+    data = np.hstack((odataSet.attributes[odata.Testing_indexes], np.array([labels]).T[odata.Testing_indexes]))
+    np.savetxt(path + "Test.txt", data, fmt='%s', delimiter=',')
+
+
+
 oData11 = getBestTrain(oExp11, "et1_ex1_1.png")
 oData12 = getBestTrain(oExp12, "et1_ex1_2.png")
 oData13 = getBestTrain(oExp13, "et1_ex1_3.png")
 oData2 = getBestTrain(oExp2, "et1_ex2.png")
 
-print(oData11.confusion_matrix)
-print(oData12.confusion_matrix)
-print(oData13.confusion_matrix)
-print(oData2.confusion_matrix)
+print("\nMatriz confusao: Setosa vs Outras\n", oData11.confusion_matrix)
+print("\nMatriz confusao: versicolor vs Outras\n", oData12.confusion_matrix)
+print("\nMatriz confusao: virginica vs Outras\n", oData13.confusion_matrix)
+print("\nMatriz confusao: AND \n", oData2.confusion_matrix)
+
+extractTrain_Test(oData11, oExp11.experimentResults[0], "CasosTreinoTeste/caso_1_1_")
+extractTrain_Test(oData12, oExp12.experimentResults[0], "CasosTreinoTeste/caso_1_2_")
+extractTrain_Test(oData13, oExp13.experimentResults[0], "CasosTreinoTeste/caso_1_3_")
+extractTrain_Test(oData2, oExp2.experimentResults[0], "CasosTreinoTeste/caso_2_")
 
 # Etapa 2
 plt.scatter(0, 0, marker='o', edgecolors='none', color='black', label='Amostra Treino')
