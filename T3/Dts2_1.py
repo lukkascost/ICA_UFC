@@ -12,8 +12,8 @@ epochs = 5000
 oExp = Experiment()
 
 oDataSet = DataSet()
-base = np.loadtxt("Datasets/artifitial1.data", usecols=range(2), delimiter=",")
-classes = np.loadtxt("Datasets/artifitial1.data", dtype=int, usecols=-1, delimiter=",")
+base = np.loadtxt("Datasets/iris.data", usecols=range(4), delimiter=",")
+classes = np.loadtxt("Datasets/iris.data", dtype=object, usecols=-1, delimiter=",")
 
 for x, y in enumerate(base):
     oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
@@ -34,9 +34,9 @@ for j in range(20):
     print(oData)
     oDataSet.append(oData)
 oExp.add_data_set(oDataSet,
-                  description="  Experimento Artificial LP 20 realizaçoes.".format())
-oExp.save("Objects/EXP01_1_LP_20.gzip".format())
+                  description="  Experimento Iris LP 20 realizaçoes.".format())
+oExp.save("Objects/EXP01_2_LP_20.gzip".format())
 
-oExp = Experiment.load("Objects/EXP01_1_LP_20.gzip".format())
+oExp = Experiment.load("Objects/EXP01_2_LP_20.gzip".format())
 print(oExp)
 print(oExp.experimentResults[0].sum_confusion_matrix)
