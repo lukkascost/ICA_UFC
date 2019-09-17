@@ -4,10 +4,28 @@ from matplotlib.lines import Line2D
 from MachineLearn.Classes import Experiment
 import matplotlib.pyplot as plt
 
-oExp2 = Experiment.load("Objects/EXP01_1_LP_20.gzip".format())
+oExp11 = Experiment.load("Objects/EXP01_1_LP_20.gzip".format())
+oExp12 = Experiment.load("Objects/EXP01_2_LP_20.gzip".format())
+oExp13 = Experiment.load("Objects/EXP01_3_LP_20.gzip".format())
+oExp14 = Experiment.load("Objects/EXP01_4_LP_20.gzip".format())
+# oExp15 = Experiment.load("Objects/EXP01_5_LP_20.gzip".format())
+
 COLORS = ['GREEN', 'RED', 'BLUE']
 MARKER = ['o', '^', "*"]
 base1 = np.loadtxt("Datasets/artifitial1.data", delimiter=",")
+
+
+print(oExp11)
+print()
+print(oExp12)
+print()
+print(oExp13)
+print()
+print(oExp14)
+print()
+# print(oExp15)
+# print()
+
 
 
 def getBestTrain(exp, name):
@@ -27,7 +45,17 @@ def getBestTrain(exp, name):
     plt.show()
     return oBestData
 
-oData2 = getBestTrain(oExp2, "et1_ex1_1.png")
+oData11 = getBestTrain(oExp11, "et1_ex1_1.png")
+oData12 = getBestTrain(oExp12, "et1_ex2_1.png")
+oData13 = getBestTrain(oExp13, "et1_ex3_1.png")
+oData14 = getBestTrain(oExp14, "et1_ex4_1.png")
+# oData15 = getBestTrain(oExp15, "et1_ex5_1.png")
+
+print("\nMatriz confusao: Artificial\n", oData11.confusion_matrix)
+print("\nMatriz confusao: Iris \n", oData12.confusion_matrix)
+print("\nMatriz confusao: Coluna 3c\n", oData13.confusion_matrix)
+print("\nMatriz confusao: Dermatologia \n", oData14.confusion_matrix)
+# print("\nMatriz confusao: Cancer \n", oData15.confusion_matrix)
 
 
 for i in base1:
@@ -41,35 +69,35 @@ plt.scatter(0, 0, marker='v', edgecolors='none', color='black', label='Amostra T
 for x1 in range(-10, 75):
     print(x1)
     for x2 in range(-20, 75):
-        plt.scatter([x1 / 25], [x2 / 25], color=COLORS[oData2.model.predict(np.matrix([[-1, x1 / 25, x2 / 25]]).T)])
+        plt.scatter([x1 / 25], [x2 / 25], color=COLORS[oData11.model.predict(np.matrix([[-1, x1 / 25, x2 / 25]]).T)])
 
-for i in oData2.Training_indexes:
-    plt.plot(oExp2.experimentResults[0].attributes[i][0],
-             oExp2.experimentResults[0].attributes[i][1],
+for i in oData11.Training_indexes:
+    plt.plot(oExp11.experimentResults[0].attributes[i][0],
+             oExp11.experimentResults[0].attributes[i][1],
              fillstyle='full',
              color='white',
              marker='o',
              markerfacecoloralt='white'
              )
-    plt.plot(oExp2.experimentResults[0].attributes[i][0],
-             oExp2.experimentResults[0].attributes[i][1],
+    plt.plot(oExp11.experimentResults[0].attributes[i][0],
+             oExp11.experimentResults[0].attributes[i][1],
              fillstyle='none',
-             color=COLORS[int(oExp2.experimentResults[0].labels[i])],
+             color=COLORS[int(oExp11.experimentResults[0].labels[i])],
              marker='o',
              markerfacecoloralt='white'
              )
-for i in oData2.Testing_indexes:
-    plt.plot(oExp2.experimentResults[0].attributes[i][0],
-             oExp2.experimentResults[0].attributes[i][1],
+for i in oData11.Testing_indexes:
+    plt.plot(oExp11.experimentResults[0].attributes[i][0],
+             oExp11.experimentResults[0].attributes[i][1],
              fillstyle='full',
              color='white',
              marker='v',
              markerfacecoloralt='white'
              )
-    plt.plot(oExp2.experimentResults[0].attributes[i][0],
-             oExp2.experimentResults[0].attributes[i][1],
+    plt.plot(oExp11.experimentResults[0].attributes[i][0],
+             oExp11.experimentResults[0].attributes[i][1],
              fillstyle='none',
-             color=COLORS[int(oExp2.experimentResults[0].labels[i])],
+             color=COLORS[int(oExp11.experimentResults[0].labels[i])],
              marker='v',
              markerfacecoloralt='white',
              )
