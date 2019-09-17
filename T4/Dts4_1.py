@@ -2,8 +2,6 @@ from matplotlib import cm
 import numpy as np
 
 from MachineLearn.Classes import Experiment, DataSet, Data
-from T3.Perceptron import Layered_perceptron
-import matplotlib.pyplot as plt
 
 from T4.Perceptron import Layered_perceptron_Logistic
 
@@ -14,17 +12,17 @@ epochs = 5000
 oExp = Experiment()
 
 oDataSet = DataSet()
-base = np.loadtxt("Datasets/dermatology.data", usecols=range(33), dtype=int,delimiter=",")
+base = np.loadtxt("Datasets/dermatology.data", usecols=range(34), dtype=int,delimiter=",")
 classes = np.loadtxt("Datasets/dermatology.data", dtype=int, usecols=-1, delimiter=",")
 
 for x, y in enumerate(base):
     oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
 oDataSet.attributes = oDataSet.attributes.astype(float)
-# oDataSet.normalize_data_set()
+oDataSet.normalize_data_set()
 for j in range(20):
     print(j)
     oData = Data(len(oDataSet.labelsNames), 31, samples=50)
-    oData.random_training_test_by_percent([112, 61, 72,49, 52, 20], 0.8)
+    oData.random_training_test_by_percent(np.unique(classes, return_counts=True)[1], 0.8)
     perc = Layered_perceptron_Logistic(learning_rate, len(oDataSet.labelsNames))
     perc.train(oDataSet.attributes[oData.Training_indexes], oDataSet.labels[oData.Training_indexes], epochs)
     oData.model = perc

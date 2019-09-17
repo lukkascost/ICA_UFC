@@ -3,7 +3,6 @@ import numpy as np
 
 from MachineLearn.Classes import Experiment, DataSet, Data
 from T3.Perceptron import Layered_perceptron
-import matplotlib.pyplot as plt
 
 COLOR = cm.rainbow(np.linspace(0, 1, 5))
 learning_rate = 0.01
@@ -12,8 +11,8 @@ epochs = 5000
 oExp = Experiment()
 
 oDataSet = DataSet()
-base = np.loadtxt("Datasets/dermatology.data", usecols=range(33), dtype=int,delimiter=",")
-classes = np.loadtxt("Datasets/dermatology.data", dtype=int, usecols=-1, delimiter=",")
+base = np.loadtxt("Datasets/breast-cancer-wisconsin.data", usecols=range(1,10), dtype=int,delimiter=",")
+classes = np.loadtxt("Datasets/breast-cancer-wisconsin.data", dtype=int, usecols=-1, delimiter=",")
 
 for x, y in enumerate(base):
     oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
@@ -34,9 +33,9 @@ for j in range(20):
     print(oData)
     oDataSet.append(oData)
 oExp.add_data_set(oDataSet,
-                  description="  Experimento Dermatologia LP 20 realizaçoes.".format())
-oExp.save("Objects/EXP01_4_LP_20.gzip".format())
+                  description="  Experimento Cancer LP 20 realizaçoes.".format())
+oExp.save("Objects/EXP01_5_LP_20.gzip".format())
 
-oExp = Experiment.load("Objects/EXP01_4_LP_20.gzip".format())
+oExp = Experiment.load("Objects/EXP01_5_LP_20.gzip".format())
 print(oExp)
 print(oExp.experimentResults[0].sum_confusion_matrix)
