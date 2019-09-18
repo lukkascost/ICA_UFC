@@ -70,9 +70,21 @@
         6,0         : 	0,0102	0,0931	0,0079	0,1119
      All Class      :	0,0057	0,0213	0,0035	0,0238
 
+##  Experimento Cancer LP 20 realizaçoes,
+### AVERAGE RESULTS 
+                     	 acc  	  Se  	  Es  	  F1  
+        2,0         : 	0,9606	0,9726	0,9377	0,9701
+        4,0         : 	0,9606	0,9377	0,9726	0,9414
+     All Class      :	0,9606	0,9551	0,9551	0,9557
+ 
+### STD RESULTS 
+                     	 acc  	  Se  	  Es  	  F1  
+        2,0         : 	0,0232	0,0170	0,0696	0,0168
+        4,0         : 	0,0232	0,0696	0,0170	0,0388
+     All Class      :	0,0232	0,0337	0,0337	0,0276
 
 
-
+# Matrizes confusao melhor treinamento.
 Matriz confusao: Artificial
 
     10  0  0 
@@ -99,3 +111,8 @@ Matriz confusao: Dermatologia
     0  0  0 14  0  0 
     0  0  0  0 12  0 
     0  0  0  0  0  6  
+    
+Matriz confusao: Cancer 
+
+    96 01
+    00 40   

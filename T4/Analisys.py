@@ -9,7 +9,7 @@ oExp12 = Experiment.load("Objects/EXP01_2_LP_20.gzip".format())
 oExp22 = Experiment.load("Objects/EXP02_2_LP_20.gzip".format())
 oExp13 = Experiment.load("Objects/EXP01_3_LP_20.gzip".format())
 oExp14 = Experiment.load("Objects/EXP01_4_LP_20.gzip".format())
-# oExp15 = Experiment.load("Objects/EXP01_5_LP_20.gzip".format())
+oExp15 = Experiment.load("Objects/EXP01_5_LP_20.gzip".format())
 
 COLORS = ['GREEN', 'RED', 'BLUE']
 MARKER = ['o', '^', "*"]
@@ -26,8 +26,8 @@ print(oExp13)
 print()
 print(oExp14)
 print()
-# print(oExp15)
-# print()
+print(oExp15)
+print()
 
 
 
@@ -53,14 +53,14 @@ oData12 = getBestTrain(oExp12, "et1_ex2_1.png")
 oData22 = getBestTrain(oExp22, "et1_ex2_2.png")
 oData13 = getBestTrain(oExp13, "et1_ex3_1.png")
 oData14 = getBestTrain(oExp14, "et1_ex4_1.png")
-# oData15 = getBestTrain(oExp15, "et1_ex5_1.png")
+oData15 = getBestTrain(oExp15, "et1_ex5_1.png")
 
 print("\nMatriz confusao: Artificial\n", oData11.confusion_matrix)
 print("\nMatriz confusao: Iris \n", oData12.confusion_matrix)
 print("\nMatriz confusao: Iris 2 atributos \n", oData22.confusion_matrix)
 print("\nMatriz confusao: Coluna 3c\n", oData13.confusion_matrix)
 print("\nMatriz confusao: Dermatologia \n", oData14.confusion_matrix)
-# print("\nMatriz confusao: Cancer \n", oData15.confusion_matrix)
+print("\nMatriz confusao: Cancer \n", oData15.confusion_matrix)
 
 
 for i in base1:

@@ -8,7 +8,7 @@ oExp11 = Experiment.load("Objects/EXP01_1_LP_20.gzip".format())
 oExp12 = Experiment.load("Objects/EXP01_2_LP_20.gzip".format())
 oExp13 = Experiment.load("Objects/EXP01_3_LP_20.gzip".format())
 oExp14 = Experiment.load("Objects/EXP01_4_LP_20.gzip".format())
-# oExp15 = Experiment.load("Objects/EXP01_5_LP_20.gzip".format())
+oExp15 = Experiment.load("Objects/EXP01_5_LP_20.gzip".format())
 
 COLORS = ['GREEN', 'RED', 'BLUE']
 MARKER = ['o', '^', "*"]
@@ -23,15 +23,15 @@ print(oExp13)
 print()
 print(oExp14)
 print()
-# print(oExp15)
-# print()
+print(oExp15)
+print()
 
 
 
 def getBestTrain(exp, name):
     """Etapa 1: Matriz confusao e grafico para melhor treinamento."""
     oDataSet = exp.experimentResults[0]
-    best = 0;
+    best = 0
     oBestData = None
     for oData in oDataSet.dataSet:
         txAcc = oData.get_metrics()[1, -1]
@@ -49,13 +49,13 @@ oData11 = getBestTrain(oExp11, "et1_ex1_1.png")
 oData12 = getBestTrain(oExp12, "et1_ex2_1.png")
 oData13 = getBestTrain(oExp13, "et1_ex3_1.png")
 oData14 = getBestTrain(oExp14, "et1_ex4_1.png")
-# oData15 = getBestTrain(oExp15, "et1_ex5_1.png")
+oData15 = getBestTrain(oExp15, "et1_ex5_1.png")
 
 print("\nMatriz confusao: Artificial\n", oData11.confusion_matrix)
 print("\nMatriz confusao: Iris \n", oData12.confusion_matrix)
 print("\nMatriz confusao: Coluna 3c\n", oData13.confusion_matrix)
 print("\nMatriz confusao: Dermatologia \n", oData14.confusion_matrix)
-# print("\nMatriz confusao: Cancer \n", oData15.confusion_matrix)
+print("\nMatriz confusao: Cancer \n", oData15.confusion_matrix)
 
 
 for i in base1:
@@ -102,7 +102,6 @@ for i in oData11.Testing_indexes:
              markerfacecoloralt='white',
              )
 plt.legend(loc='upper left', bbox_to_anchor=(1.04, 1))
-plt.grid(True)
 plt.savefig(("Results/et1_ex1_surface.png"), dpi=100, bbox_inches="tight")
 plt.show()
 
