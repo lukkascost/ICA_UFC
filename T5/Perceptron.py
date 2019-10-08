@@ -6,6 +6,7 @@ class multi_Layered_perceptron_Logistic(object):
         self.w_layers = []
         self.lr = learning_rate
         self.architecture = architecture
+        self.et = []
 
     def train_classifier(self, att, labels, epochs):
         self._initialize_weights()
@@ -28,20 +29,27 @@ class multi_Layered_perceptron_Logistic(object):
                 labels_new = np.zeros(current_y.shape)
                 labels_new[int(labels[input_index])] = 1
                 current_error = labels_new - current_y
+                erro += np.sum(np.abs(current_error))
                 ## Propagation
                 for layer in range(len(self.architecture) - 2, -1, -1):
                     y_ = layered_output[layer] - np.power(layered_output[layer], 2)
                     self.w_layers[layer] = self.w_layers[layer] + self.lr * np.multiply(current_error, y_) * layered_input[layer].T
                     current_error = (np.multiply(current_error, y_).T * self.w_layers[layer][:,1:]).T
-                    print(layer)
-
+            self.et.append(erro)
     def _initialize_weights(self):
         for k in range(len(self.architecture) - 1):
-            # layer_w = (np.random.random((self.architecture[k + 1], self.architecture[k] + 1)))
-            layer_w = (np.ones((self.architecture[k + 1], self.architecture[k] + 1)))
+            layer_w = (np.random.random((self.architecture[k + 1], self.architecture[k] + 1)))
             self.w_layers.append(layer_w)
-            print(k, self.architecture[k + 1], layer_w.shape)
 
     def _activate_input(self, _input, layer):
         u = self.w_layers[layer] * _input
         return 1 / (1 + np.exp(-u))
+
+    def predict(self, input_data):
+        _input = np.matrix(np.hstack(([-1], input_data))).T
+        for layer in range(len(self.architecture) - 1):
+            current_y = self._activate_input(_input, layer)
+            _input = np.vstack(([-1], current_y))
+        labels_new = np.zeros(current_y.shape)
+        return np.argmax(current_y)
+
