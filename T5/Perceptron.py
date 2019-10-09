@@ -36,6 +36,7 @@ class multi_Layered_perceptron_Logistic(object):
                     self.w_layers[layer] = self.w_layers[layer] + self.lr * np.multiply(current_error, y_) * layered_input[layer].T
                     current_error = (np.multiply(current_error, y_).T * self.w_layers[layer][:,1:]).T
             self.et.append(erro)
+
     def _initialize_weights(self):
         for k in range(len(self.architecture) - 1):
             layer_w = (np.random.random((self.architecture[k + 1], self.architecture[k] + 1)))
