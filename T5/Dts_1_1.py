@@ -19,8 +19,8 @@ GRID = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 oExp = Experiment()
 
 oDataSet = DataSet()
-base = np.loadtxt("Datasets/artifitial1.data", usecols=range(2), delimiter=",")
-classes = np.loadtxt("Datasets/artifitial1.data", dtype=float, usecols=-1, delimiter=",")
+base = np.loadtxt("Datasets/XOR.txt", usecols=range(2), delimiter=",")
+classes = np.loadtxt("Datasets/XOR.txt", dtype=float, usecols=-1, delimiter=",")
 
 for x, y in enumerate(base):
     oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
@@ -63,5 +63,5 @@ for j in range(20):
     oDataSet.append(oData)
     print(oData)
 oExp.add_data_set(oDataSet,
-                  description="  Experimento artificial1 LP 20 realizaçoes.".format())
+                  description="  Experimento XOR MLP 20 realizaçoes.".format())
 oExp.save("Objects/EXP01_1_LP_20.gzip".format())
