@@ -22,11 +22,11 @@ GRID = [1,2,3,4,5,6,7,8,9,10]
 oExp = Experiment()
 
 oDataSet = DataSet()
-base = np.loadtxt("Datasets/artifitial1.data", usecols=range(1), delimiter=",")
-classes = np.loadtxt("Datasets/artifitial1.data", usecols=-1, delimiter=",")
+base = np.loadtxt("Datasets/abalone.data", usecols=range(8), delimiter=",")
+classes = np.loadtxt("Datasets/abalone.data", usecols=-1, delimiter=",")
 
 for x, y in enumerate(base):
-    oDataSet.add_sample_of_attribute(np.array(list([np.float32(y)]) + [classes[x]]))
+    oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
 oDataSet.attributes = oDataSet.attributes.astype(float)
 # oDataSet.normalize_data_set()
 oDataSet.labels = np.array([classes]).T
@@ -72,5 +72,5 @@ for j in range(20):
 
     oDataSet.append(oData)
 oExp.add_data_set(oDataSet,
-                  description="  Experimento Artificial MLP 20 realizaçoes.".format())
-oExp.save("Objects/EXP02_1_LP_20.gzip".format())
+                  description="  Experimento Abalone MLP 20 realizaçoes.".format())
+oExp.save("Objects/EXP02_2_LP_20.gzip".format())
