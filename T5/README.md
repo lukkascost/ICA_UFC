@@ -18,17 +18,17 @@ Homeworks for class of Applied computational intelligence
 #   Experimento iris LP 20 realizaçoes.# 
 ##  AVERAGE RESULTS ## #
                      	 acc  	  Se  	  Es  	  F1  
-    Iris-setosa     : 	1.0000	1.0000	1.0000	1.0000
-  Iris-versicolor   : 	0.9567	0.9100	0.9800	0.9323
-   Iris-virginica   : 	0.9567	0.9600	0.9550	0.9364
-     All Class      :	0.9711	0.9567	0.9783	0.9562
+        Iris-setosa     : 	1.0000	1.0000	1.0000	1.0000
+      Iris-versicolor   : 	0.9567	0.9100	0.9800	0.9323
+       Iris-virginica   : 	0.9567	0.9600	0.9550	0.9364
+         All Class      :	0.9711	0.9567	0.9783	0.9562
 
 ## ## STD RESULTS ## ###
                      	 acc  	  Se  	  Es  	  F1  
-    Iris-setosa     : 	0.0000	0.0000	0.0000	0.0000
-  Iris-versicolor   : 	0.0300	0.0889	0.0400	0.0476
-   Iris-virginica   : 	0.0300	0.0800	0.0444	0.0457
-     All Class      :	0.0200	0.0300	0.0150	0.0306
+        Iris-setosa     : 	0.0000	0.0000	0.0000	0.0000
+      Iris-versicolor   : 	0.0300	0.0889	0.0400	0.0476
+       Iris-virginica   : 	0.0300	0.0800	0.0444	0.0457
+         All Class      :	0.0200	0.0300	0.0150	0.0306
 
 #   Experimento coluna LP 20 realizaçoes.# 
 ##  AVERAGE RESULTS ## #

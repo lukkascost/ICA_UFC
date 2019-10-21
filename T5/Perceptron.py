@@ -20,7 +20,7 @@ class multi_Layered_perceptron_Logistic(object):
                 layered_input = []
                 layered_output = []
                 ## Forward
-                _input = np.matrix(np.hstack(([-1], cpdata[input_index]))).T
+                _input = np.matrix(np.hstack(([[-1]], np.matrix(cpdata[input_index])))).T
                 for layer in range(len(self.architecture) - 1):
                     layered_input.append(_input)
                     current_y = self._activate_input(_input, layer)
