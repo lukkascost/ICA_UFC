@@ -11,10 +11,10 @@ import matplotlib.pyplot as plt
 from T5.Perceptron import multi_Layered_perceptron_Logistic
 
 COLOR = cm.rainbow(np.linspace(0, 1, 5))
-LEARNING_RATE = 0.5
-epochs = 200
+LEARNING_RATE = 0.1
+epochs = 300
 K_FOLD = 5
-GRID = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+GRID = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
 
 oExp = Experiment()
 
