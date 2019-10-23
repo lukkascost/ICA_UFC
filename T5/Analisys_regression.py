@@ -62,7 +62,7 @@ plt.show()
 
 max = oExp11.experimentResults[0].normalize_between[0,0]
 min = oExp11.experimentResults[0].normalize_between[0,1]
-for i in range(720):
+for i in range(500):
     plt.scatter(i, oData11.model.predict((i-min)/(max-min))[0,0], marker=MARKER[0], edgecolors='none', color=COLORS[0])
     plt.scatter(i, 3 * np.sin(i*np.pi/180) +1 , marker=MARKER[1], edgecolors='none', color=COLORS[1])
 plt.savefig(("Results/et1_ex1_surface_reg.png"), dpi=100, bbox_inches="tight")
