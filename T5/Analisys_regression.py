@@ -8,7 +8,7 @@ oExp11 = Experiment.load("Objects/EXP02_1_LP_20.gzip".format())
 oExp12 = Experiment.load("Objects/EXP02_2_LP_20.gzip".format())
 oExp13 = Experiment.load("Objects/EXP02_3_LP_20.gzip".format())
 
-COLORS = ['GREEN', 'RED', 'BLUE']
+COLORS = ['BLUE', 'ORANGE', 'RED']
 MARKER = ['o', '^', "*"]
 base1 = np.loadtxt("Datasets/artifitial1.data", delimiter=",")
 
