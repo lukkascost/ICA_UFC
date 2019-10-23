@@ -14,7 +14,7 @@ from T5.Perceptron_r import multi_Layered_perceptron_linear
 import matplotlib.pyplot as plt
 
 COLOR = cm.rainbow(np.linspace(0, 1, 5))
-LEARNING_RATE = 0.1
+LEARNING_RATE = 0.05
 epochs = 300
 K_FOLD = 5
 GRID = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
@@ -36,8 +36,8 @@ for j in range(20):
     oData = Data(1, 31, samples=50)
     indices = np.arange(oDataSet.attributes.shape[0])
     np.random.shuffle(indices)
-    oData.Testing_indexes = indices[int(oDataSet.attributes.shape[0] * 0.85):]
-    oData.Training_indexes = indices[:int(oDataSet.attributes.shape[0] * 0.85)]
+    oData.Testing_indexes = indices[int(oDataSet.attributes.shape[0] * 0.80):]
+    oData.Training_indexes = indices[:int(oDataSet.attributes.shape[0] * 0.80)]
 
     grid_result = np.zeros((len(GRID), K_FOLD))
     for g1, g_param in enumerate(GRID):
