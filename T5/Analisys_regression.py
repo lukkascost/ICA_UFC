@@ -12,15 +12,20 @@ COLORS = ['GREEN', 'RED', 'BLUE']
 MARKER = ['o', '^', "*"]
 base1 = np.loadtxt("Datasets/artifitial1.data", delimiter=",")
 
+def imprimir_resultado(oexp, name, oData):
+    oDataSet = oexp.experimentResults[0]
+    print("EXPERIMENTO "+name+" MELHOR RESULTADO MSE: ", oData.params['MSE'], )
 
-print(oExp11)
-print()
-print(oExp12)
-print()
-print(oExp13)
-print()
-
-
+    RMSE = []
+    MSE = []
+    for i in oDataSet.dataSet:
+        RMSE.append(i.params['RMSE'])
+        MSE.append(i.params['MSE'])
+    MSE = np.array(MSE)
+    RMSE = np.array(RMSE)
+    print("\tRMSE MEDIO ", np.mean(RMSE), "DESVIO", np.std(RMSE))
+    print("\tMSE MEDIO ", np.mean(MSE), "DESVIO", np.std(MSE))
+    print()
 
 def getBestTrain(exp, name):
     """Etapa 1: Matriz confusao e grafico para melhor treinamento."""
@@ -42,6 +47,10 @@ oData11 = getBestTrain(oExp11, "et1_ex1_1_reg.png")
 oData12 = getBestTrain(oExp12, "et1_ex2_1_reg.png")
 oData13 = getBestTrain(oExp13, "et1_ex3_1_reg.png")
 
+imprimir_resultado(oExp11,"Artificial1",oData11)
+imprimir_resultado(oExp12,"Abalone",oData12)
+imprimir_resultado(oExp13,"Consumo gasolina",oData13)
+
 print("\nMatriz confusao: Artificial\n", oData11.params)
 print("\nMatriz confusao: Abalone \n", oData12.params)
 print("\nMatriz confusao: Consumo gasolina 3c\n", oData13.params)
@@ -56,4 +65,5 @@ min = oExp11.experimentResults[0].normalize_between[0,1]
 for i in range(720):
     plt.scatter(i, oData11.model.predict((i-min)/(max-min))[0,0], marker=MARKER[0], edgecolors='none', color=COLORS[0])
     plt.scatter(i, 3 * np.sin(i*np.pi/180) +1 , marker=MARKER[1], edgecolors='none', color=COLORS[1])
+plt.savefig(("Results/et1_ex1_surface_reg.png"), dpi=100, bbox_inches="tight")
 plt.show()
