@@ -36,6 +36,7 @@ class multi_Layered_perceptron_linear(object):
                     self.w_layers[layer] = self.w_layers[layer] + self.lr * np.multiply(current_error, y_) * layered_input[layer].T
                     current_error = (np.multiply(current_error, y_).T * self.w_layers[layer][:,1:]).T
             self.et.append(erro)
+            if erro < 0.005 : break
 
 
     def _initialize_weights(self):

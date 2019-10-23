@@ -12,10 +12,10 @@ from T5.Perceptron_r import multi_Layered_perceptron_linear
 import matplotlib.pyplot as plt
 
 COLOR = cm.rainbow(np.linspace(0, 1, 5))
-LEARNING_RATE = 0.01
-epochs = 200
+LEARNING_RATE = 0.05
+epochs = 300
 K_FOLD = 5
-GRID = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+GRID = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
 
 oExp = Experiment()
 
@@ -23,8 +23,11 @@ oDataSet = DataSet()
 base = np.loadtxt("Datasets/pmsm_temperature_data.csv", usecols=[0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12], skiprows=1,
                   delimiter=",")
 classes = np.loadtxt("Datasets/pmsm_temperature_data.csv", usecols=[8], skiprows=1, delimiter=",")
-for x, y in enumerate(base):
-    oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
+#for x, y in enumerate(base):
+#    oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
+oDataSet.attributes = base
+oDataSet.labels = classes
+oDataSet.number_of_samples = base.shape[0]
 oDataSet.attributes = oDataSet.attributes.astype(float)
 oDataSet.normalize_data_set()
 oDataSet.labels = np.array([classes]).T
@@ -41,17 +44,19 @@ for j in range(20):
     for g1, g_param in enumerate(GRID):
         k_slice = 0
         for train, test in slices.split(oData.Training_indexes):
+            print("Treinando....")
             mpl = multi_Layered_perceptron_linear(LEARNING_RATE, (oDataSet.attributes.shape[1], g_param, 1))
             mpl.train_regression(oDataSet.attributes[oData.Training_indexes[train]],
                                  oDataSet.labels[oData.Training_indexes[train]], epochs)
             y_pred = []
             y_true = []
+            print("Testando.....")
             for i in test:
                 y_pred.append(mpl.predict(oDataSet.attributes[oData.Training_indexes[i]])[0, 0])
                 y_true.append(oDataSet.labels[oData.Training_indexes[i]])
             grid_result[g1, k_slice] = mean_squared_error(y_true, y_pred)
             k_slice += 1
-            print(k_slice)
+            print(g_param, k_slice)
     print(grid_result, j)
     best_p = GRID[np.argmin(np.mean(grid_result, axis=1))]
     mpl = multi_Layered_perceptron_linear(LEARNING_RATE, (oDataSet.attributes.shape[1], best_p, 1))
