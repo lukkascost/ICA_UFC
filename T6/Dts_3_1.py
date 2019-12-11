@@ -24,8 +24,9 @@ GRID_B = [.25, .5, .75, 1]
 _OPTIMIZER = SGD(lr=LEARNING_RATE, momentum=0.0, decay=0.0, nesterov=False)
 
 oDataSet = DataSet()
-base = np.loadtxt("Datasets/XOR.txt", usecols=range(2), delimiter=",")
-classes = np.loadtxt("Datasets/XOR.txt", dtype=float, usecols=-1, delimiter=",")
+base = np.loadtxt("Datasets/column_3C.dat", usecols=range(6), delimiter=" ")
+classes = np.loadtxt("Datasets/column_3C.dat", dtype=object, usecols=-1, delimiter=" ")
+
 
 for x, y in enumerate(base):
     oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
@@ -37,7 +38,7 @@ lb.fit(oDataSet.labels)
 
 for j in range(20):
     experiment = Experiment(api_key="9F7edG4BHTWFJJetI2XctSUzM",
-                            project_name="mest-rn-t6-xor",
+                            project_name="mest-rn-t6-coluna",
                             workspace="lukkascost",
                             )
     experiment.set_name("REALIZACAO_{:02d}".format(j + 1))
