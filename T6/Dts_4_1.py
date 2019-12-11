@@ -36,7 +36,7 @@ oDataSet.normalize_data_set()
 lb = LabelBinarizer()
 lb.fit(oDataSet.labels)
 
-for j in range(9,20):
+for j in range(16,20):
     experiment = Experiment(api_key="9F7edG4BHTWFJJetI2XctSUzM",
                             project_name="mest-rn-t6-dermatology",
                             workspace="lukkascost",
