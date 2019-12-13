@@ -36,7 +36,7 @@ oDataSet.normalize_data_set()
 oDataSet.labels = np.array([classes]).T
 
 
-for j in range(2):
+for j in range(10):
     slices = KFold(n_splits=K_FOLD, shuffle=True)
     oData = Data(1, 31, samples=50)
     indices = np.arange(oDataSet.attributes.shape[0])

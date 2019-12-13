@@ -10,7 +10,7 @@ from sklearn.model_selection import KFold
 
 from T8.algoritmo_genetico import fit
 
-COLOR = cm.rainbow(np.linspace(0, 1, 5))
+COLOR = ['BLUE', 'ORANGE', 'RED']
 LEARNING_RATE = 50
 epochs = 1000
 K_FOLD = 2
@@ -24,7 +24,7 @@ classes = np.loadtxt("Datasets/XOR.txt", dtype=float, usecols=-1, delimiter=",")
 for x, y in enumerate(base):
     oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
 oDataSet.attributes = oDataSet.attributes.astype(float)
-oDataSet.normalize_data_set()
+#oDataSet.normalize_data_set()
 
 for j in range(20):
     experiment = Experiment(api_key="9F7edG4BHTWFJJetI2XctSUzM",
@@ -76,13 +76,46 @@ for j in range(20):
     y_true = oDataSet.labels[oData.Training_indexes]
     experiment.log_metric("train_accuracy", accuracy_score(y_true, y_pred))
     oDataSet.append(oData)
+    atts = []
+    for x1 in range(-10, 35):
+        for x2 in range(-20, 35):
+            atts.append([x1 / 25, x2 / 25])
+    atts = np.matrix(atts)
+    y_pred = model._predict(atts).argmax(axis=1).T.tolist()[0]
+    for i in range(atts.shape[0]):
+        plt.scatter(atts[i, 0], atts[i, 1], color=COLOR[y_pred[i]])
 
-    random_matrix = np.random.random((1000, 2))
-    y_pred = model._predict(random_matrix).argmax(axis=1).T.tolist()[0]
-
-    for i in range(1000):
-        plt.scatter(random_matrix[i,0], random_matrix[i,1], color=COLOR[y_pred[i]])
-    experiment.log_figure(figure=plt)
+    for i in oData.Training_indexes:
+        plt.plot(oDataSet.attributes[i][0],
+                 oDataSet.attributes[i][1],
+                 fillstyle='full',
+                 color='white',
+                 marker='o',
+                 markerfacecoloralt='white'
+                 )
+        plt.plot(oDataSet.attributes[i][0],
+                 oDataSet.attributes[i][1],
+                 fillstyle='none',
+                 color=COLOR[int(oDataSet.labels[i])],
+                 marker='o',
+                 markerfacecoloralt='white'
+                 )
+    for i in oData.Testing_indexes:
+        plt.plot(oDataSet.attributes[i][0],
+                 oDataSet.attributes[i][1],
+                 fillstyle='full',
+                 color='white',
+                 marker='v',
+                 markerfacecoloralt='white'
+                 )
+        plt.plot(oDataSet.attributes[i][0],
+                 oDataSet.attributes[i][1],
+                 fillstyle='none',
+                 color=COLOR[int(oDataSet.labels[i])],
+                 marker='v',
+                 markerfacecoloralt='white',
+                 )
+    plt.legend(loc='upper left', bbox_to_anchor=(1.04, 1))
     plt.show()
     experiment.end()
 
