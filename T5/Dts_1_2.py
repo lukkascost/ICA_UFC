@@ -25,6 +25,7 @@ oDataSet = DataSet()
 base = np.loadtxt("Datasets/artifitial1.data", usecols=range(1), delimiter=",")
 classes = np.loadtxt("Datasets/artifitial1.data", usecols=-1, delimiter=",")
 
+
 for x, y in enumerate(base):
     oDataSet.add_sample_of_attribute(np.array(list([np.float32(y)]) + [classes[x]]))
 oDataSet.attributes = oDataSet.attributes.astype(float)
