@@ -75,10 +75,10 @@ plt.show()
 
 max = oExp11.experimentResults[0].normalize_between[0, 0]
 min = oExp11.experimentResults[0].normalize_between[0, 1]
-random_matrix = np.arange(720)
+random_matrix = np.arange(500)
 random_matrix = (random_matrix - min) / (max - min)
 y_pred = oData11.model.predict(random_matrix)
-for i in range(720):
+for i in range(500):
     plt.scatter(i, y_pred[i], marker=MARKER[0], edgecolors='none',
                 color=COLORS[0])
     plt.scatter(i, 3 * np.sin(i * np.pi / 180) + 1, marker=MARKER[1], edgecolors='none', color=COLORS[1])
