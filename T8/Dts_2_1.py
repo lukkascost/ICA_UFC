@@ -1,22 +1,20 @@
 # coding=utf-8
 from comet_ml import Experiment
-from comet_ml.utils import ConfusionMatrix
-
 import numpy as np
 from matplotlib import cm
+import matplotlib.pyplot as plt
 from MachineLearn.Classes import DataSet, Data
 
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import KFold
-from sklearn.preprocessing import LabelBinarizer
 
 from T8.algoritmo_genetico import fit
 
 COLOR = cm.rainbow(np.linspace(0, 1, 5))
 LEARNING_RATE = 0.1
 epochs = 1000
-K_FOLD = 3
-GRID_NEURON = [10]
+K_FOLD = 2
+GRID_NEURON = [50]
 GRID_B = [1000]
 
 oDataSet = DataSet()
@@ -27,7 +25,6 @@ for x, y in enumerate(base):
     oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
 oDataSet.attributes = oDataSet.attributes.astype(float)
 oDataSet.normalize_data_set()
-
 
 for j in range(20):
     experiment = Experiment(api_key="9F7edG4BHTWFJJetI2XctSUzM",
@@ -45,7 +42,7 @@ for j in range(20):
             k_slice = 0
             for train, test in slices.split(oData.Training_indexes):
                 model = fit(oDataSet.attributes[oData.Training_indexes[train]],
-                            oDataSet.labels[oData.Training_indexes[train]], 50, 1000, 0.2, 0.1, 0.7)
+                            oDataSet.labels[oData.Training_indexes[train]], g2_param, g_param, 0.2, 0.1, 0.7)
 
                 y_pred = model._predict(oDataSet.attributes[oData.Training_indexes[test]]).argmax(axis=1).T.tolist()[0]
                 y_true = oDataSet.labels[oData.Training_indexes[test]]
@@ -57,20 +54,15 @@ for j in range(20):
     best_b = GRID_B[np.unravel_index(np.argmax(np.mean(grid_result, axis=2)), grid_result.shape[:2])[1]]
 
     model = fit(oDataSet.attributes[oData.Training_indexes],
-                oDataSet.labels[oData.Training_indexes], 50, 1000, 0.2, 0.1, 0.7)
+                oDataSet.labels[oData.Training_indexes],  g2_param, g_param, 0.2, 0.1, 0.7)
 
     y_pred = model._predict(oDataSet.attributes[oData.Testing_indexes]).argmax(axis=1).T.tolist()[0]
     y_true = oDataSet.labels[oData.Testing_indexes]
-
+    experiment.log_other("pesos", str(model.genes))
     experiment.log_metric("test_accuracy", accuracy_score(y_true, y_pred))
     experiment.log_metric("beta", best_b)
     experiment.log_metric("neurons", best_p)
     experiment.log_confusion_matrix(matrix=confusion_matrix(y_true, y_pred).tolist(), labels=oDataSet.labelsNames)
-    # model.save('model.h5')
-    # experiment.log_asset("model.h5")
-    model.save_weights('model.weights')
-    experiment.log_asset("model.weights")
-
     print(accuracy_score(y_true, y_pred))
     print(confusion_matrix(y_true, y_pred))
     oData.confusion_matrix = confusion_matrix(y_true, y_pred)
@@ -82,5 +74,14 @@ for j in range(20):
     y_pred = model._predict(oDataSet.attributes[oData.Training_indexes]).argmax(axis=1).T.tolist()[0]
     y_true = oDataSet.labels[oData.Training_indexes]
     experiment.log_metric("train_accuracy", accuracy_score(y_true, y_pred))
-    experiment.end()
     oDataSet.append(oData)
+
+    random_matrix = np.random.random((1000, 2))
+    y_pred = model._predict(random_matrix).argmax(axis=1).T.tolist()[0]
+
+    for i in range(1000):
+        plt.scatter(random_matrix[i,0], random_matrix[i,1], color=COLOR[y_pred[i]])
+    experiment.log_figure(figure=plt)
+    plt.show()
+    experiment.end()
+
