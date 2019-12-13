@@ -41,9 +41,9 @@ classes = np.loadtxt("Datasets/XOR.txt", dtype=float, usecols=-1, delimiter=",")
 for x, y in enumerate(base):
     oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
 oDataSet.attributes = oDataSet.attributes.astype(float)
-oDataSet.normalize_data_set()
+#oDataSet.normalize_data_set()
 
-for j in range(2):
+for j in range(10):
     slices = KFold(n_splits=K_FOLD, shuffle=True)
     oData = Data(len(oDataSet.labelsNames), 31, samples=50)
     oData.random_training_test_by_percent(np.unique(classes, return_counts=True)[1], 0.8)
