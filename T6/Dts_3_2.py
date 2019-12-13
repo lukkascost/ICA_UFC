@@ -18,19 +18,19 @@ from T6.kmeans_initializer import InitCentersKMeans
 
 COLOR = cm.rainbow(np.linspace(0, 1, 5))
 LEARNING_RATE = 0.1
-epochs = 50
+epochs = 200
 K_FOLD = 3
 GRID_NEURON = [20, 15, 10, 5]
 GRID_B = [.25, .5, .75, 1]
 _OPTIMIZER = RMSprop(learning_rate=LEARNING_RATE)
 
 oDataSet = DataSet()
-base = np.loadtxt("Datasets/artifitial1.data", usecols=range(1), delimiter=",")
-classes = np.loadtxt("Datasets/artifitial1.data", usecols=-1, delimiter=",")
+base = np.loadtxt("Datasets/measurements.csv", usecols=range(7), delimiter=",")
+classes = np.loadtxt("Datasets/measurements.csv", usecols=-1, delimiter=",")
 
 
 for x, y in enumerate(base):
-    oDataSet.add_sample_of_attribute(np.array(list([np.float32(y)]) + [classes[x]]))
+    oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
 oDataSet.attributes = oDataSet.attributes.astype(float)
 oDataSet.normalize_data_set()
 oDataSet.labels = np.array([classes]).T
@@ -38,7 +38,7 @@ oDataSet.labels = np.array([classes]).T
 
 for j in range(20):
     experiment = Experiment(api_key="9F7edG4BHTWFJJetI2XctSUzM",
-                            project_name="mest-rn-t6-artifitial1",
+                            project_name="mest-rn-t6-consumo",
                             workspace="lukkascost",
                             )
     experiment.set_name("REALIZACAO_{:02d}".format(j + 1))
@@ -59,7 +59,7 @@ for j in range(20):
                 rbflayer = RBFLayer(g_param,
                                     initializer=InitCentersRandom(oDataSet.attributes[oData.Training_indexes[train]]),
                                     betas=g2_param,
-                                    input_shape=(1,))
+                                    input_shape=(base.shape[1],))
                 model.add(rbflayer)
                 model.add(Dense(1))
                 model.compile(loss='mse',
@@ -67,7 +67,7 @@ for j in range(20):
 
                 model.fit(oDataSet.attributes[oData.Training_indexes[train]],
                           oDataSet.labels[oData.Training_indexes[train]],
-                          batch_size=50,
+                          batch_size=25,
                           epochs=epochs,
                           verbose=0)
 
@@ -84,7 +84,7 @@ for j in range(20):
     rbflayer = RBFLayer(best_p,
                         initializer=InitCentersRandom(oDataSet.attributes[oData.Training_indexes]),
                         betas=best_b,
-                        input_shape=(1,))
+                        input_shape=(base.shape[1],))
 
     model.add(rbflayer)
     model.add(Dense(1))
@@ -102,12 +102,6 @@ for j in range(20):
     experiment.log_figure(figure=plt, figure_name='Loss curve')
     plt.show()
 
-    random_matrix = np.random.random((1000,1))
-    plt.scatter(random_matrix, model.predict(random_matrix), label = "Curva modelo")
-    plt.scatter(oDataSet.attributes, oDataSet.labels,label = "Curva dataset")
-    plt.legend(loc='upper left', bbox_to_anchor=(1.04, 1))
-    experiment.log_figure(figure=plt, figure_name="surface")
-    plt.show()
 
     experiment.log_metric("test_accuracy", mean_squared_error(y_true, y_pred))
     experiment.log_metric("test_accuracy_rmse", np.sqrt(mean_squared_error(y_true, y_pred)))
