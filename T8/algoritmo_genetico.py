@@ -101,7 +101,7 @@ def fit(base, classes, n_pop, n_ger, mut_per, eli_per, cru_per):
 
     def melhores(populacao):
         return populacao[:int(perc_elitismo * len(populacao))], populacao[int(perc_elitismo * len(populacao)):]
-
+    bests = []
     ## criacao aleatoria da populacao
     populacao = np.random.random((qtd_solucao, qtd_pesos_mlp))
     pop = []
@@ -127,7 +127,8 @@ def fit(base, classes, n_pop, n_ger, mut_per, eli_per, cru_per):
 
         pop = top
         pop.sort(key=lambda x: x.fitness, reverse=True)
+        bests.append(pop[0])
         if (pop[0].fitness == 1.0):
             break
     print(top[0].fitness)
-    return top[0]
+    return top[0], bests

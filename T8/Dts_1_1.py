@@ -41,7 +41,7 @@ for j in range(20):
         for g2, g2_param in enumerate(GRID_B):
             k_slice = 0
             for train, test in slices.split(oData.Training_indexes):
-                model = fit(oDataSet.attributes[oData.Training_indexes[train]],
+                model,bests = fit(oDataSet.attributes[oData.Training_indexes[train]],
                             oDataSet.labels[oData.Training_indexes[train]], g2_param, g_param, 0.2, 0.1, 0.7)
 
                 y_pred = model._predict(oDataSet.attributes[oData.Training_indexes[test]]).argmax(axis=1).T.tolist()[0]
@@ -53,9 +53,11 @@ for j in range(20):
     best_p = GRID_NEURON[np.unravel_index(np.argmax(np.mean(grid_result, axis=2)), grid_result.shape[:2])[0]]
     best_b = GRID_B[np.unravel_index(np.argmax(np.mean(grid_result, axis=2)), grid_result.shape[:2])[1]]
 
-    model = fit(oDataSet.attributes[oData.Training_indexes],
+    model_bests =  fit(oDataSet.attributes[oData.Training_indexes],
                 oDataSet.labels[oData.Training_indexes],  g2_param, g_param, 0.2, 0.1, 0.7)
-
+    bests = [x.fitness for x in bests]
+    plt.plot(bests)
+    plt.show()
     y_pred = model._predict(oDataSet.attributes[oData.Testing_indexes]).argmax(axis=1).T.tolist()[0]
     y_true = oDataSet.labels[oData.Testing_indexes]
     experiment.log_other("pesos", str(model.genes))

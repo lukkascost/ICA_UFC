@@ -41,7 +41,7 @@ for j in range(20):
         for g2, g2_param in enumerate(GRID_B):
             k_slice = 0
             for train, test in slices.split(oData.Training_indexes):
-                model = fit(oDataSet.attributes[oData.Training_indexes[train]],
+                model,bests = fit(oDataSet.attributes[oData.Training_indexes[train]],
                             oDataSet.labels[oData.Training_indexes[train]], LEARNING_RATE, epochs, 0.2, 0.1, 0.7)
 
                 y_pred = model._predict(oDataSet.attributes[oData.Training_indexes[test]]).argmax(axis=1).T.tolist()[0]
@@ -51,11 +51,14 @@ for j in range(20):
                 k_slice += 1
                 print(grid_result)
 
-    model = fit(oDataSet.attributes[oData.Training_indexes],
+    model , bests= fit(oDataSet.attributes[oData.Training_indexes],
                 oDataSet.labels[oData.Training_indexes],  LEARNING_RATE, epochs, 0.2, 0.1, 0.7)
 
     y_pred = model._predict(oDataSet.attributes[oData.Testing_indexes]).argmax(axis=1).T.tolist()[0]
     y_true = oDataSet.labels[oData.Testing_indexes]
+    bests = [ x.fitness for x in bests]
+    plt.plot(bests)
+    plt.show()
     experiment.log_other("pesos", str(model.genes))
     experiment.log_metric("test_accuracy", accuracy_score(y_true, y_pred))
     experiment.log_metric("beta", LEARNING_RATE)
