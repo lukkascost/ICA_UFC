@@ -1,135 +1,86 @@
+# coding=utf-8
+from comet_ml import Experiment
+from comet_ml.utils import ConfusionMatrix
+
 import numpy as np
-import math
+from matplotlib import cm
+from MachineLearn.Classes import DataSet, Data
 
-## para gerar a populacao
-qtd_solucao = 100
-qtd_geracoes = 1000
-perc_mutacoes = 0.2
-perc_elitismo = 0.1
-perc_cruzamento = 0.7
+from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.model_selection import KFold
+from sklearn.preprocessing import LabelBinarizer
 
-## para gerar quantidade de pesos da mlp
-qtd_neuronios_entrada = 2 + 1
-qtd_neuronios_escondida = 10
-qtd_neuronios_saida = 2
-qtd_pesos_mlp = (qtd_neuronios_entrada * qtd_neuronios_escondida) + (
-        (qtd_neuronios_escondida + 1) * qtd_neuronios_saida)
+from T8.algoritmo_genetico import fit
 
+COLOR = cm.rainbow(np.linspace(0, 1, 5))
+LEARNING_RATE = 0.1
+epochs = 1000
+K_FOLD = 3
+GRID_NEURON = [10]
+GRID_B = [1000]
+
+oDataSet = DataSet()
 base = np.loadtxt("Datasets/XOR.txt", usecols=range(2), delimiter=",")
 classes = np.loadtxt("Datasets/XOR.txt", dtype=float, usecols=-1, delimiter=",")
 
-
-def fitness(cromossomo):
-    ## implementacao do predict de uma MLP
-    X = np.hstack((np.full((base.shape[0],1), -1), base))
-    w = np.matrix(cromossomo[:X.shape[1] * qtd_neuronios_escondida]).reshape((X.shape[1], qtd_neuronios_escondida))
-    m = np.matrix(cromossomo[X.shape[1] * qtd_neuronios_escondida:]).reshape((w.shape[1]+1, qtd_neuronios_saida))
-    u1 = X*w
-    h = 1 / (1 + np.exp(-u1))
-    h = np.hstack((np.full((base.shape[0],1), -1), h))
-
-    u2 = h*m
-    y = 1 / (1 + np.exp(-u2))
-    e = np.matrix(classes).T - np.argmax(y,axis=1)
-    acc = len(e[e==0].tolist()[0]) / base.shape[0]
-    return acc
+for x, y in enumerate(base):
+    oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
+oDataSet.attributes = oDataSet.attributes.astype(float)
+oDataSet.normalize_data_set()
 
 
-def cruzamento(pai1, pai2):
-    ## cruzamento unico ponto
-    ponto = np.random.randint(1,len(pai2.genes)-1)
-    filho1 = np.concatenate((pai1.genes[:ponto], pai2.genes[ponto:]), axis=None)
-    filho2 = np.concatenate((pai2.genes[:ponto], pai1.genes[ponto:]), axis=None)
-    return Individuo(filho1, fitness(filho1)), Individuo(filho2, fitness(filho2))
+for j in range(20):
+    experiment = Experiment(api_key="9F7edG4BHTWFJJetI2XctSUzM",
+                            project_name="mest-rn-t8-xor",
+                            workspace="lukkascost",
+                            )
+    experiment.set_name("REALIZACAO_{:02d}".format(j + 1))
 
+    slices = KFold(n_splits=K_FOLD, shuffle=True)
+    oData = Data(len(oDataSet.labelsNames), 31, samples=50)
+    oData.random_training_test_by_percent(np.unique(classes, return_counts=True)[1], 0.8)
+    grid_result = np.zeros((len(GRID_NEURON), len(GRID_B), K_FOLD))
+    for g1, g_param in enumerate(GRID_NEURON):
+        for g2, g2_param in enumerate(GRID_B):
+            k_slice = 0
+            for train, test in slices.split(oData.Training_indexes):
+                model = fit(oDataSet.attributes[oData.Training_indexes[train]],
+                            oDataSet.labels[oData.Training_indexes[train]], 50, 1000, 0.2, 0.1, 0.7)
 
-def selecao(populacao):
-    soma = sum(populacao)
-    r = np.random.random(1)*soma.fitness
-    s = 0
-    for i in populacao:
-        s += i.fitness
-        if s > r:
-            return i
-    pass
+                y_pred = model._predict(oDataSet.attributes[oData.Training_indexes[test]]).argmax(axis=1).T.tolist()[0]
+                y_true = oDataSet.labels[oData.Training_indexes[test]]
+                grid_result[g1, g2, k_slice] = accuracy_score(y_true, y_pred)
+                # print(grid_result)
+                k_slice += 1
+                print(grid_result)
+    best_p = GRID_NEURON[np.unravel_index(np.argmax(np.mean(grid_result, axis=2)), grid_result.shape[:2])[0]]
+    best_b = GRID_B[np.unravel_index(np.argmax(np.mean(grid_result, axis=2)), grid_result.shape[:2])[1]]
 
-def melhores(populacao):
-    global perc_elitismo
-    return populacao[:int(perc_elitismo*len(populacao))], populacao[int(perc_elitismo*len(populacao)):]
+    model = fit(oDataSet.attributes[oData.Training_indexes],
+                oDataSet.labels[oData.Training_indexes], 50, 1000, 0.2, 0.1, 0.7)
 
-class Individuo():
-    def __init__(self, genes, fitness=None):
-        self.genes = genes
-        self.fitness = fitness
-        if fitness == None:
-            self._reset_fit()
+    y_pred = model._predict(oDataSet.attributes[oData.Testing_indexes]).argmax(axis=1).T.tolist()[0]
+    y_true = oDataSet.labels[oData.Testing_indexes]
 
-    def __str__(self):
-        return str(self.fitness)#+" "+str(self.genes)
+    experiment.log_metric("test_accuracy", accuracy_score(y_true, y_pred))
+    experiment.log_metric("beta", best_b)
+    experiment.log_metric("neurons", best_p)
+    experiment.log_confusion_matrix(matrix=confusion_matrix(y_true, y_pred).tolist(), labels=oDataSet.labelsNames)
+    # model.save('model.h5')
+    # experiment.log_asset("model.h5")
+    model.save_weights('model.weights')
+    experiment.log_asset("model.weights")
 
-    def __add__(self, other):
-        return Individuo(self.genes + other.genes, self.fitness + other.fitness)
-
-    def __radd__(self, other):
-        if 0 == other:
-            return self
-        else:
-            return self.__add__(other)
-
-    def mutation(self):
-        indexes = np.arange(len(self.genes))
-        np.random.shuffle(indexes)
-        indexes = indexes[:len(self.genes) // 2]
-        self.genes[indexes] = self.genes[indexes] + (np.random.random(len(self.genes) // 2) - 0.5)
-        self._reset_fit()
-
-    def _reset_fit(self):
-        ## implementacao do predict de uma MLP
-        y = self._predict(base)
-        e = np.matrix(classes).T - np.argmax(y, axis=1)
-        acc = len(e[e == 0].tolist()[0]) / base.shape[0]
-        self.fitness = acc
-
-    def _predict(self, base):
-        X = np.hstack((np.full((base.shape[0], 1), -1), base))
-        w = np.matrix(self.genes[:X.shape[1] * qtd_neuronios_escondida]).reshape((X.shape[1], qtd_neuronios_escondida))
-        m = np.matrix(self.genes[X.shape[1] * qtd_neuronios_escondida:]).reshape((w.shape[1] + 1, qtd_neuronios_saida))
-        u1 = X * w
-        h = 1 / (1 + np.exp(-u1))
-        h = np.hstack((np.full((base.shape[0], 1), -1), h))
-
-        u2 = h * m
-        y = 1 / (1 + np.exp(-u2))
-        return y
-
-## criacao aleatoria da populacao
-populacao = np.random.random((qtd_solucao, qtd_pesos_mlp))
-pop = []
-winner = None
-for individuo in populacao:
-     pop.append(Individuo(individuo))
-pop.sort(key=lambda x: x.fitness, reverse=True)
-
-for k in range(qtd_geracoes):
-    top, pop = melhores(pop)
-
-    for i in range(int(len(populacao)*perc_cruzamento)//2):
-        pai1 = selecao(pop)
-        pop.remove(pai1)
-        pai2 = selecao(pop)
-        pop.remove(pai2)
-        filho1, filho2 = cruzamento(pai1, pai2)
-        top.append(filho1)
-        top.append(filho2)
-    for i in pop:
-        i.mutation()
-        top.append(i)
-
-    pop = top
-    pop.sort(key=lambda x: x.fitness, reverse=True)
-    print(pop[0])
-    if(pop[0].fitness == 1.0):
-        break
-
-winner = top[0]
-print(winner.genes)
+    print(accuracy_score(y_true, y_pred))
+    print(confusion_matrix(y_true, y_pred))
+    oData.confusion_matrix = confusion_matrix(y_true, y_pred)
+    oData.model = model
+    oData.params = {"k_fold": K_FOLD, "GRID_RESULT": grid_result, "GRID_VALUES_NEURON": GRID_NEURON,
+                    "GRID_VALUES_BETA": GRID_B, "LEARNING RATE": LEARNING_RATE,
+                    "EPOCHS": epochs}
+    experiment.log_other("params", oData.params)
+    y_pred = model._predict(oDataSet.attributes[oData.Training_indexes]).argmax(axis=1).T.tolist()[0]
+    y_true = oDataSet.labels[oData.Training_indexes]
+    experiment.log_metric("train_accuracy", accuracy_score(y_true, y_pred))
+    experiment.end()
+    oDataSet.append(oData)
