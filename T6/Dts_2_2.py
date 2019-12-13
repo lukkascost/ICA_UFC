@@ -36,7 +36,7 @@ oDataSet.normalize_data_set()
 oDataSet.labels = np.array([classes]).T
 
 
-for j in range(20):
+for j in range(16,20):
     experiment = Experiment(api_key="9F7edG4BHTWFJJetI2XctSUzM",
                             project_name="mest-rn-t6-abalone",
                             workspace="lukkascost",
@@ -67,7 +67,7 @@ for j in range(20):
 
                 model.fit(oDataSet.attributes[oData.Training_indexes[train]],
                           oDataSet.labels[oData.Training_indexes[train]],
-                          batch_size=25,
+                          batch_size=50,
                           epochs=epochs,
                           verbose=0)
 
