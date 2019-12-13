@@ -14,8 +14,8 @@ oExp14 = Experiment.load("Objects/EXP01_4_LP_20.gzip".format())
 oExp15 = Experiment.load("Objects/EXP01_5_LP_20.gzip".format())
 
 
-#COLORS = ['GREEN', 'RED', 'BLUE']
-COLORS = ['BLUE', 'ORANGE', 'RED']
+COLORS = ['GREEN', 'RED', 'BLUE']
+#COLORS = ['BLUE', 'ORANGE', 'RED']
 
 MARKER = ['o', '^', "*"]
 base1 = np.loadtxt("Datasets/XOR.txt", delimiter=",")

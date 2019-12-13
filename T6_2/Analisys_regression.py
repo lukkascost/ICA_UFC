@@ -12,7 +12,7 @@ oExp12 = Experiment.load("Objects/EXP02_2_LP_20.gzip".format())
 oExp13 = Experiment.load("Objects/EXP02_3_LP_20.gzip".format())
 
 COLORS = ['GREEN', 'RED', 'BLUE']
-COLORS = ['BLUE', 'ORANGE', 'RED']
+#COLORS = ['BLUE', 'ORANGE', 'RED']
 
 MARKER = ['o', '^', "*"]
 base1 = np.loadtxt("Datasets/artifitial1.data", delimiter=",")
@@ -75,10 +75,10 @@ plt.show()
 
 max = oExp11.experimentResults[0].normalize_between[0, 0]
 min = oExp11.experimentResults[0].normalize_between[0, 1]
-random_matrix = np.arange(500)
+random_matrix = np.arange(700)
 random_matrix = (random_matrix - min) / (max - min)
 y_pred = oData11.model.predict(random_matrix)
-for i in range(500):
+for i in range(700):
     plt.scatter(i, y_pred[i], marker=MARKER[0], edgecolors='none',
                 color=COLORS[0])
     plt.scatter(i, 3 * np.sin(i * np.pi / 180) + 1, marker=MARKER[1], edgecolors='none', color=COLORS[1])
