@@ -9,6 +9,7 @@ from keras.models import Sequential
 from keras.layers.core import Dense
 from keras.optimizers import *
 from keras.utils import to_categorical
+import keras.backend as K
 from rbflayer import RBFLayer, InitCentersRandom
 from sklearn.preprocessing import LabelBinarizer
 import matplotlib.pyplot as plt
@@ -38,7 +39,7 @@ oDataSet.normalize_data_set()
 lb = LabelBinarizer()
 lb.fit(oDataSet.labels)
 
-for j in range(20):
+for j in range(2):
     slices = KFold(n_splits=K_FOLD, shuffle=True)
     oData = Data(len(oDataSet.labelsNames), 31, samples=50)
     oData.random_training_test_by_percent(np.unique(classes, return_counts=True)[1], 0.8)
@@ -47,6 +48,7 @@ for j in range(20):
         for g2, g2_param in enumerate(GRID_B):
             k_slice = 0
             for train, test in slices.split(oData.Training_indexes):
+                K.clear_session()
                 model = Sequential()
                 rbflayer = RBFLayer(g_param,
                                     initializer=InitCentersRandom(oDataSet.attributes[oData.Training_indexes[train]]),
@@ -65,8 +67,9 @@ for j in range(20):
                 y_pred = model.predict(oDataSet.attributes[oData.Training_indexes[test]]).argmax(axis=1)
                 y_true = oDataSet.labels[oData.Training_indexes[test]]
                 grid_result[g1, g2, k_slice] = accuracy_score(y_true, y_pred)
-                # print(grid_result)
+                print(grid_result)
                 k_slice += 1
+    K.clear_session()
     best_p = GRID_NEURON[np.unravel_index(np.argmax(np.mean(grid_result, axis=2)), grid_result.shape[:2])[0]]
     best_b = GRID_B[np.unravel_index(np.argmax(np.mean(grid_result, axis=2)), grid_result.shape[:2])[1]]
 
@@ -92,7 +95,11 @@ for j in range(20):
     print(accuracy_score(y_true, y_pred))
     print(confusion_matrix(y_true, y_pred))
     oData.confusion_matrix = confusion_matrix(y_true, y_pred)
-    oData.model = model
+    model.save('model.h5')
+    myArr = None
+    with open("model.h5", "rb") as binaryfile:
+        myArr = bytearray(binaryfile.read())
+    oData.model = myArr, model.history.history['loss']
     oData.params = {"k_fold": K_FOLD, "GRID_RESULT": grid_result, "GRID_VALUES_NEURON": GRID_NEURON,
                     "GRID_VALUES_BETA": GRID_B, "LEARNING RATE": LEARNING_RATE,
                     "EPOCHS": epochs}

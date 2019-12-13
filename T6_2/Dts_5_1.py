@@ -35,8 +35,9 @@ _OPTIMIZER = SGD(lr=LEARNING_RATE, momentum=0.0, decay=0.0, nesterov=False)
 oExp = Experiment()
 
 oDataSet = DataSet()
-base = np.loadtxt("Datasets/XOR.txt", usecols=range(2), delimiter=",")
-classes = np.loadtxt("Datasets/XOR.txt", dtype=float, usecols=-1, delimiter=",")
+base = np.loadtxt("Datasets/breast-cancer-wisconsin.data", usecols=range(1,10), dtype=int,delimiter=",")
+classes = np.loadtxt("Datasets/breast-cancer-wisconsin.data", dtype=int, usecols=-1, delimiter=",")
+
 
 for x, y in enumerate(base):
     oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
@@ -111,5 +112,5 @@ for j in range(2):
     oDataSet.append(oData)
     print(oData)
 oExp.add_data_set(oDataSet,
-                  description="  Experimento XOR MLP 20 realizaçoes.".format())
-oExp.save("Objects/EXP01_1_LP_20.gzip".format())
+                  description="  Experimento cancer LP 20 realizaçoes.".format())
+oExp.save("Objects/EXP01_5_LP_20.gzip".format())

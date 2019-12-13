@@ -8,19 +8,12 @@ from sklearn.model_selection import KFold
 from keras.models import Sequential
 from keras.layers.core import Dense
 from keras.optimizers import *
-import keras.backend as K
 from keras.utils import to_categorical
 from rbflayer import RBFLayer, InitCentersRandom
 from sklearn.preprocessing import LabelBinarizer
 import matplotlib.pyplot as plt
+import keras.backend as K
 
-
-
-def binarizer(mat):
-    result = np.zeros((mat.shape[0], 2))
-    for i in range(mat.shape[0]):
-        result[i, int(mat[i, 0])] = 1
-    return result
 
 
 COLOR = cm.rainbow(np.linspace(0, 1, 5))
@@ -35,13 +28,17 @@ _OPTIMIZER = SGD(lr=LEARNING_RATE, momentum=0.0, decay=0.0, nesterov=False)
 oExp = Experiment()
 
 oDataSet = DataSet()
-base = np.loadtxt("Datasets/XOR.txt", usecols=range(2), delimiter=",")
-classes = np.loadtxt("Datasets/XOR.txt", dtype=float, usecols=-1, delimiter=",")
+base = np.loadtxt("Datasets/dermatology.data", usecols=range(34), dtype=int,delimiter=",")
+classes = np.loadtxt("Datasets/dermatology.data", dtype=int, usecols=-1, delimiter=",")
 
 for x, y in enumerate(base):
     oDataSet.add_sample_of_attribute(np.array(list(np.float32(y)) + [classes[x]]))
 oDataSet.attributes = oDataSet.attributes.astype(float)
 oDataSet.normalize_data_set()
+
+
+lb = LabelBinarizer()
+lb.fit(oDataSet.labels)
 
 for j in range(2):
     slices = KFold(n_splits=K_FOLD, shuffle=True)
@@ -64,7 +61,7 @@ for j in range(2):
                 model.compile(loss='categorical_crossentropy',
                               optimizer=_OPTIMIZER)
                 model.fit(oDataSet.attributes[oData.Training_indexes[train]],
-                          binarizer(oDataSet.labels[oData.Training_indexes[train]]),
+                          lb.transform(oDataSet.labels[oData.Training_indexes[train]]),
                           batch_size=50,
                           epochs=epochs,
                           verbose=0)
@@ -89,7 +86,7 @@ for j in range(2):
     model.compile(loss='categorical_crossentropy',
                   optimizer=_OPTIMIZER)
     model.fit(oDataSet.attributes[oData.Training_indexes],
-              binarizer(oDataSet.labels[oData.Training_indexes]),
+              lb.transform(oDataSet.labels[oData.Training_indexes]),
               batch_size=50,
               epochs=epochs,
               verbose=1)
@@ -111,5 +108,5 @@ for j in range(2):
     oDataSet.append(oData)
     print(oData)
 oExp.add_data_set(oDataSet,
-                  description="  Experimento XOR MLP 20 realizaçoes.".format())
-oExp.save("Objects/EXP01_1_LP_20.gzip".format())
+                  description="  Experimento dermatologia LP 20 realizaçoes.".format())
+oExp.save("Objects/EXP01_4_LP_20.gzip".format())
